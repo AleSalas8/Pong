@@ -14,8 +14,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         
-        StackPane root new StackPane();
-        var scene = new Scene(root, 640, 480);
+        StackPane root = new StackPane();
+        var scene = new Scene(new StackPane (root), 640, 480);
         stage.setScene(scene);
         stage.show();
         
