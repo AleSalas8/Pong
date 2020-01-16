@@ -122,7 +122,7 @@ public class App extends Application {
                     }
                     
                     Shape shapeColision = Shape.intersect(circleBall, rectStick);
-                    boolean colisonVacia = shapeColision.getBoundsInLocal().isEmpty()
+                    boolean colisionVacia = shapeColision.getBoundsInLocal().isEmpty()
                     if(colisionVacia == false) {
                         System.out.println("Ha colisionado");
                         ballDirectionX = -1;
