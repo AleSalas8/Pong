@@ -5,14 +5,20 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -23,13 +29,16 @@ public class App extends Application {
 
     final short SCENE_HEIGHT = 480;
     final short SCENE_WIDTH = 640;
+    int TEXT_SIZE = 24;
+    int score;
+    int highScore;
 
     short ballCenterX = 0;
-    byte ballCurrentSpeedX = 10;
+    byte ballCurrentSpeedX = 3;
     byte ballDirectionX = 1;
     
     short ballCenterY = 0;
-    byte ballCurrentSpeedY = 10;
+    byte ballCurrentSpeedY = 3;
     byte ballDirectionY = 1;
        
     short stickHeight = 50;        
@@ -121,11 +130,75 @@ public class App extends Application {
                         stickPosY = (short)(SCENE_HEIGHT-stickHeight);
                     }
                     
+                    for (int i=0; i<SCENE_WIDTH; i+=30) { 
+                    Line line = new Line (SCENE_HEIGHT/2, i, SCENE_HEIGHT/2, i+10);
+                    line.setStroke(Color.WHITE);
+                    line.setStrokeWidth(4);
+                    root.getChildren().add(line);
+                    }
+                    
+                    // Layout Principal
+                    HBox paneScores = new HBox();
+                    paneScores.setTranslateY(20);
+                    paneScores.setMinWidth(SCENE_HEIGHT);
+                    paneScores.setAlignment(Pos.CENTER);
+                    paneScores.setSpacing(100);
+                    root.getChildren().add(paneScores);
+                    
+                    // Layout para puntuacion actual
+                    HBox paneCurrentScore = new HBox();
+                    paneCurrentScore.setSpacing(10);
+                    paneScores.getChildren().add(paneCurrentScore);
+                    
+                    // Layout para puntuación máxima
+                    HBox paneHighScore = new HBox();
+                    paneHighScore.setSpacing(10);
+                    paneScores.getChildren().add(paneHighScore);
+                    
+                    // Texto de etiqueta para la puntuación
+                    Text textTitleScore = new Text("Score");
+                    textTitleScore.setFont(Font.font(TEXT_SIZE));
+                    
+                    // Texto para la puntuación
+                    Text textScore = new Text ("0");
+                    textScore.setFont(Font.font(TEXT_SIZE));
+                    textScore.setFill(Color.WHITE);
+                    
+                    //Texto de etiqueta para la puntuación máxima
+                    Text textTitleHighScore = new Text("Max.Score:");
+                    textTitleHighScore.setFont(Font.font(TEXT_SIZE));
+                    textTitleHighScore.setFill(Color.WHITE);
+                    
+                    //Texto para la puntuación máxima
+                    Text textHighScore = new Text("0");
+                    textHighScore.setFont(Font.font(TEXT_SIZE));
+                    textHighScore.setFill(Color.WHITE);
+                    
+                    //Añadir los textos a los layouts reservados para ellos
+                    paneCurrentScore.getChildren().add(textTitleScore);
+                    paneCurrentScore.getChildren().add(textScore);
+                    paneHighScore.getChildren().add(textTitleScore);
+                    paneHighScore.getChildren().add(textHighScore);
+                    
+                    
                     Shape shapeColision = Shape.intersect(circleBall, rectStick);
                     boolean colisionVacia = shapeColision.getBoundsInLocal().isEmpty()
-                    if(colisionVacia == false) {
+                    if(colisionVacia == false && ballCurrentSpeedX > 0) {
                         System.out.println("Ha colisionado");
                         ballDirectionX = -1;
+                        //incrementar puntuación actual
+                        score++;
+                        textScore.setText(String.valueOf(score));
+                    }
+                    //if(ballCenterX >= SCENE_HEIGHT){
+                      //  ballCurrentSpeedX = -3;
+                    //}
+                    if(ballCenterX >= SCENE_HEIGHT){
+                        if (score > highScore) {
+                            highScore = score;
+                            textHighScore.setText(String.valueOf(highScore));
+                            
+                        }
                     }
                 }
             })                
